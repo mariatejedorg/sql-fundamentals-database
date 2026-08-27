@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proyecto 4 — Fundamentales en SQL</title>
+<style>
+  :root {
+    --surface: #fcfcfb;
+    --page-plane: #f9f9f7;
+    --ink-primary: #0b0b0b;
+    --ink-secondary: #52514e;
+    --ink-muted: #898781;
+    --gridline: #e1e0d9;
+    --border: rgba(11,11,11,0.10);
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    margin: 0;
+    background: var(--page-plane);
+    color: var(--ink-primary);
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px 64px; }
+
+  .hero {
+    background: linear-gradient(135deg, #1a2e4a 0%, #2a78d6 100%);
+    color: #ffffff;
+    padding: 48px 24px 40px;
+    margin-bottom: 28px;
+  }
+  .hero-inner { max-width: 1080px; margin: 0 auto; }
+  .hero h1 { font-size: 1.75rem; margin: 0 0 8px; font-weight: 700; }
+  .hero p { margin: 0; color: rgba(255,255,255,0.85); font-size: 0.95rem; }
+  .hero .meta { margin-top: 18px; font-size: 0.8rem; color: rgba(255,255,255,0.65); letter-spacing: 0.02em; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 22px;
+  }
+  .card h2 { font-size: 1.05rem; margin: 0 0 8px; color: var(--ink-primary); font-weight: 600; }
+  .objective { font-size: 0.85rem; color: var(--ink-secondary); margin: 0 0 16px; line-height: 1.5; }
+
+  .summary-table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+  .summary-table th {
+    text-align: right; padding: 8px 12px; color: var(--ink-muted);
+    font-weight: 500; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--gridline);
+  }
+  .summary-table td {
+    padding: 8px 12px; text-align: right; border-bottom: 1px solid var(--gridline);
+    color: var(--ink-primary); font-variant-numeric: tabular-nums;
+  }
+  .summary-table th:nth-child(1), .summary-table td:nth-child(1),
+  .summary-table th:nth-child(2), .summary-table td:nth-child(2) { text-align: left; }
+  .summary-table tbody tr:hover { background: var(--page-plane); }
+
+  footer { text-align: center; font-size: 0.78rem; color: var(--ink-muted); padding-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Base de Datos de Fundamentales en SQL</h1>
+    <p>18 empresas en 9 sectores, cargadas en SQLite y consultadas con SQL puro.</p>
+    <div class="meta">datos fundamentales y de precio vía yfinance</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="card">
+  <h2>PER medio por sector</h2>
+  <div style="height:100%; width:100%;">                        <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.0.0.min.js" integrity="sha256-FEYfO0yRyLtZCpnW0Dw/0DHKQO7Afrq3ml4+rBB818o=" crossorigin="anonymous"></script>                <div id="8726199f-ebff-48f4-879a-a86235d47b68" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("8726199f-ebff-48f4-879a-a86235d47b68")) {                    Plotly.newPlot(                        "8726199f-ebff-48f4-879a-a86235d47b68",                        [{"hovertemplate":"%{y}: PER medio %{x}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#4a3aa7","#e34948","#2a78d6"]},"orientation":"h","x":{"dtype":"f8","bdata":"ZmZmZmZmIUCamZmZmZkrQM3MzMzMTDBAAAAAAAAAOEAzMzMzM7M4QM3MzMzMzDhAMzMzMzMzOUAzMzMzMzM8QDMzMzMzs0JA"},"y":["Energy","Financial Services","Communication Services","Healthcare","Consumer Defensive","Consumer Cyclical","Utilities","Industrials","Technology"],"type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05}}},"title":{"font":{"family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":15,"color":"#0b0b0b"},"text":"PER medio por sector"},"font":{"family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":12,"color":"#52514e"},"legend":{"font":{"color":"#52514e","size":11},"bgcolor":"rgba(0,0,0,0)"},"margin":{"l":50,"r":30,"t":50,"b":40},"xaxis":{"tickfont":{"color":"#898781","size":11},"title":{"text":"PER medio"},"gridcolor":"#e1e0d9","gridwidth":1,"linecolor":"#c3c2b7","zeroline":false},"yaxis":{"tickfont":{"color":"#898781","size":11},"title":{"font":{"color":"#52514e","size":12}},"gridcolor":"#e1e0d9","gridwidth":1,"linecolor":"#c3c2b7","zeroline":false},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","showlegend":false},                        {"displaylogo": false, "responsive": true}                    )                };            </script>        </div>
+</div>
+
+<div class="card">
+  <h2>Rentabilidad reciente por empresa</h2>
+  <div style="height:520px; width:100%;">                            <div id="a70d2f20-1d95-48e4-8c87-ed9d4a30da69" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("a70d2f20-1d95-48e4-8c87-ed9d4a30da69")) {                    Plotly.newPlot(                        "a70d2f20-1d95-48e4-8c87-ed9d4a30da69",                        [{"hovertemplate":"%{y}: %{x:+.1f}%\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":["#d03b3b","#d03b3b","#d03b3b","#006300","#006300","#006300","#006300","#006300","#006300","#006300","#006300","#006300","#006300","#006300","#006300","#006300","#006300","#006300"]},"orientation":"h","x":{"dtype":"f8","bdata":"ZmZmZmZmMMBmZmZmZmYlwGZmZmZmZiLAAAAAAAAAAIBmZmZmZmbmPwAAAAAAAARAAAAAAAAABEAAAAAAAAAIQJqZmZmZmQlAzczMzMzMGECamZmZmZkpQAAAAAAAAC5AmpmZmZkZMECamZmZmRkwQDMzMzMzszVAzczMzMzMN0BmZmZmZmY8QGZmZmZmpkZA"},"y":["LVMH","Unilever","Deutsche Telekom","Roche","Nestl\u00e9","Iberdrola","Novartis","Telef\u00f3nica","Inditex","SAP","Airbus","Apple","Siemens","Banco Santander","ASML","Microsoft","BBVA","Repsol"],"type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05}}},"shapes":[{"line":{"color":"#c3c2b7","width":1},"type":"line","x0":0,"x1":0,"xref":"x","y0":0,"y1":1,"yref":"y domain"}],"title":{"font":{"family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":15,"color":"#0b0b0b"},"text":"Rentabilidad reciente por empresa"},"font":{"family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":12,"color":"#52514e"},"legend":{"font":{"color":"#52514e","size":11},"bgcolor":"rgba(0,0,0,0)"},"margin":{"l":50,"r":30,"t":50,"b":40},"xaxis":{"tickfont":{"color":"#898781","size":11},"title":{"text":"Rentabilidad (%)"},"gridcolor":"#e1e0d9","gridwidth":1,"linecolor":"#c3c2b7","zeroline":false},"yaxis":{"tickfont":{"color":"#898781","size":11},"title":{"font":{"color":"#52514e","size":12}},"gridcolor":"#e1e0d9","gridwidth":1,"linecolor":"#c3c2b7","zeroline":false},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","showlegend":false,"height":520},                        {"displaylogo": false, "responsive": true}                    )                };            </script>        </div>
+</div>
+
+<div class="card">
+  <h2>Ranking de PER por sector</h2>
+  <p class="objective">Objetivo de negocio: dentro de cada sector, ¿qué empresas cotizan más baratas relativas a beneficio (PER más bajo) y cuáles más caras? Útil como primer filtro de "valor" dentro de un sector antes de un análisis más fino. Concepto: WHERE filtra filas individuales (aquí, descarta PER nulos o negativos, que no son comparables); ORDER BY hace el ranking, no GROUP BY.</p>
+  <table class="dataframe summary-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sector</th>
+      <th>nombre</th>
+      <th>ticker</th>
+      <th>per</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Communication Services</td>
+      <td>Deutsche Telekom</td>
+      <td>DTE.DE</td>
+      <td>16.3</td>
+    </tr>
+    <tr>
+      <td>Consumer Cyclical</td>
+      <td>LVMH</td>
+      <td>MC.PA</td>
+      <td>20.7</td>
+    </tr>
+    <tr>
+      <td>Consumer Cyclical</td>
+      <td>Inditex</td>
+      <td>ITX.MC</td>
+      <td>28.9</td>
+    </tr>
+    <tr>
+      <td>Consumer Defensive</td>
+      <td>Unilever</td>
+      <td>ULVR.L</td>
+      <td>21.7</td>
+    </tr>
+    <tr>
+      <td>Consumer Defensive</td>
+      <td>Nestlé</td>
+      <td>NESN.SW</td>
+      <td>27.7</td>
+    </tr>
+    <tr>
+      <td>Energy</td>
+      <td>Repsol</td>
+      <td>REP.MC</td>
+      <td>8.7</td>
+    </tr>
+    <tr>
+      <td>Financial Services</td>
+      <td>BBVA</td>
+      <td>BBVA.MC</td>
+      <td>13.2</td>
+    </tr>
+    <tr>
+      <td>Financial Services</td>
+      <td>Banco Santander</td>
+      <td>SAN.MC</td>
+      <td>14.5</td>
+    </tr>
+    <tr>
+      <td>Healthcare</td>
+      <td>Roche</td>
+      <td>RHHBY</td>
+      <td>23.9</td>
+    </tr>
+    <tr>
+      <td>Healthcare</td>
+      <td>Novartis</td>
+      <td>NOVN.SW</td>
+      <td>24.0</td>
+    </tr>
+    <tr>
+      <td>Industrials</td>
+      <td>Airbus</td>
+      <td>AIR.PA</td>
+      <td>27.6</td>
+    </tr>
+    <tr>
+      <td>Industrials</td>
+      <td>Siemens</td>
+      <td>SIE.DE</td>
+      <td>28.8</td>
+    </tr>
+    <tr>
+      <td>Technology</td>
+      <td>SAP</td>
+      <td>SAP.DE</td>
+      <td>26.9</td>
+    </tr>
+    <tr>
+      <td>Technology</td>
+      <td>Microsoft</td>
+      <td>MSFT</td>
+      <td>27.6</td>
+    </tr>
+    <tr>
+      <td>Technology</td>
+      <td>Apple</td>
+      <td>AAPL</td>
+      <td>36.0</td>
+    </tr>
+    <tr>
+      <td>Technology</td>
+      <td>ASML</td>
+      <td>ASML.AS</td>
+      <td>58.9</td>
+    </tr>
+    <tr>
+      <td>Utilities</td>
+      <td>Iberdrola</td>
+      <td>IBE.MC</td>
+      <td>25.2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="card">
+  <h2>Mejor margen de beneficio por sector</h2>
+  <p class="objective">Objetivo de negocio: ¿qué empresa es la más rentable (mejor margen de beneficio) dentro de cada sector? Es la pregunta típica al construir una cesta "calidad" sector a sector, en vez de comparar márgenes entre sectores muy distintos entre sí (un margen del 8% puede ser excelente en retail y mediocre en tecnología). Concepto: subconsulta correlacionada -- para cada empresa, comprueba que su margen es el máximo dentro de su propio sector.</p>
+  <table class="dataframe summary-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sector</th>
+      <th>nombre</th>
+      <th>ticker</th>
+      <th>margen_beneficio</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Technology</td>
+      <td>Microsoft</td>
+      <td>MSFT</td>
+      <td>0.4</td>
+    </tr>
+    <tr>
+      <td>Financial Services</td>
+      <td>Banco Santander</td>
+      <td>SAN.MC</td>
+      <td>0.3</td>
+    </tr>
+    <tr>
+      <td>Healthcare</td>
+      <td>Novartis</td>
+      <td>NOVN.SW</td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <td>Consumer Defensive</td>
+      <td>Unilever</td>
+      <td>ULVR.L</td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <td>Utilities</td>
+      <td>Iberdrola</td>
+      <td>IBE.MC</td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <td>Consumer Cyclical</td>
+      <td>Inditex</td>
+      <td>ITX.MC</td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <td>Industrials</td>
+      <td>Siemens</td>
+      <td>SIE.DE</td>
+      <td>0.1</td>
+    </tr>
+    <tr>
+      <td>Communication Services</td>
+      <td>Deutsche Telekom</td>
+      <td>DTE.DE</td>
+      <td>0.1</td>
+    </tr>
+    <tr>
+      <td>Energy</td>
+      <td>Repsol</td>
+      <td>REP.MC</td>
+      <td>0.1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="card">
+  <h2>Capitalización y PER medio por sector</h2>
+  <p class="objective">Objetivo de negocio: vista agregada por sector -- capitalización total, PER medio y nº de empresas -- para saber qué sectores pesan más en la cesta y si cotizan caros o baratos como bloque, no empresa a empresa. Concepto: GROUP BY agrega FILAS en grupos (aquí, por sector); WHERE (en la consulta 01) filtra filas individuales antes de agregar -- son operaciones distintas y en distinto momento de la ejecución (WHERE antes de agrupar, HAVING después si hiciera falta filtrar sobre el resultado agregado).</p>
+  <table class="dataframe summary-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sector</th>
+      <th>num_empresas</th>
+      <th>cap_total_bn</th>
+      <th>per_medio</th>
+      <th>margen_medio_pct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Technology</td>
+      <td>4</td>
+      <td>9,034.3</td>
+      <td>37.4</td>
+      <td>29.6</td>
+    </tr>
+    <tr>
+      <td>Healthcare</td>
+      <td>2</td>
+      <td>606.7</td>
+      <td>24.0</td>
+      <td>21.1</td>
+    </tr>
+    <tr>
+      <td>Industrials</td>
+      <td>2</td>
+      <td>389.1</td>
+      <td>28.2</td>
+      <td>8.8</td>
+    </tr>
+    <tr>
+      <td>Financial Services</td>
+      <td>2</td>
+      <td>323.1</td>
+      <td>13.8</td>
+      <td>33.0</td>
+    </tr>
+    <tr>
+      <td>Consumer Defensive</td>
+      <td>2</td>
+      <td>308.9</td>
+      <td>24.7</td>
+      <td>13.3</td>
+    </tr>
+    <tr>
+      <td>Consumer Cyclical</td>
+      <td>2</td>
+      <td>223.8</td>
+      <td>24.8</td>
+      <td>14.6</td>
+    </tr>
+    <tr>
+      <td>Communication Services</td>
+      <td>2</td>
+      <td>158.8</td>
+      <td>16.3</td>
+      <td>-1.0</td>
+    </tr>
+    <tr>
+      <td>Utilities</td>
+      <td>1</td>
+      <td>134.4</td>
+      <td>25.2</td>
+      <td>15.9</td>
+    </tr>
+    <tr>
+      <td>Energy</td>
+      <td>1</td>
+      <td>29.2</td>
+      <td>8.7</td>
+      <td>6.4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="card">
+  <h2>Rentabilidad reciente por empresa</h2>
+  <p class="objective">Objetivo de negocio: ¿cómo se ha comportado el precio de cada empresa en el periodo cargado? Cruza los fundamentales (tabla empresas) con el precio real (tabla precios_historicos) para poder contrastar "barata sobre el papel" (PER bajo) con "cómo la está tratando el mercado" (rentabilidad reciente) en la misma consulta. Concepto: JOIN real entre dos tablas relacionadas por ticker -- exactamente lo que un CSV suelto no puede resolver sin duplicar datos.</p>
+  <table class="dataframe summary-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sector</th>
+      <th>nombre</th>
+      <th>ticker</th>
+      <th>per</th>
+      <th>rentabilidad_pct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Energy</td>
+      <td>Repsol</td>
+      <td>REP.MC</td>
+      <td>8.7</td>
+      <td>45.3</td>
+    </tr>
+    <tr>
+      <td>Financial Services</td>
+      <td>BBVA</td>
+      <td>BBVA.MC</td>
+      <td>13.2</td>
+      <td>28.4</td>
+    </tr>
+    <tr>
+      <td>Technology</td>
+      <td>Microsoft</td>
+      <td>MSFT</td>
+      <td>27.6</td>
+      <td>23.8</td>
+    </tr>
+    <tr>
+      <td>Technology</td>
+      <td>ASML</td>
+      <td>ASML.AS</td>
+      <td>58.9</td>
+      <td>21.7</td>
+    </tr>
+    <tr>
+      <td>Financial Services</td>
+      <td>Banco Santander</td>
+      <td>SAN.MC</td>
+      <td>14.5</td>
+      <td>16.1</td>
+    </tr>
+    <tr>
+      <td>Industrials</td>
+      <td>Siemens</td>
+      <td>SIE.DE</td>
+      <td>28.8</td>
+      <td>16.1</td>
+    </tr>
+    <tr>
+      <td>Technology</td>
+      <td>Apple</td>
+      <td>AAPL</td>
+      <td>36.0</td>
+      <td>15.0</td>
+    </tr>
+    <tr>
+      <td>Industrials</td>
+      <td>Airbus</td>
+      <td>AIR.PA</td>
+      <td>27.6</td>
+      <td>12.8</td>
+    </tr>
+    <tr>
+      <td>Technology</td>
+      <td>SAP</td>
+      <td>SAP.DE</td>
+      <td>26.9</td>
+      <td>6.2</td>
+    </tr>
+    <tr>
+      <td>Consumer Cyclical</td>
+      <td>Inditex</td>
+      <td>ITX.MC</td>
+      <td>28.9</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <td>Communication Services</td>
+      <td>Telefónica</td>
+      <td>TEF.MC</td>
+      <td>—</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <td>Utilities</td>
+      <td>Iberdrola</td>
+      <td>IBE.MC</td>
+      <td>25.2</td>
+      <td>2.5</td>
+    </tr>
+    <tr>
+      <td>Healthcare</td>
+      <td>Novartis</td>
+      <td>NOVN.SW</td>
+      <td>24.0</td>
+      <td>2.5</td>
+    </tr>
+    <tr>
+      <td>Consumer Defensive</td>
+      <td>Nestlé</td>
+      <td>NESN.SW</td>
+      <td>27.7</td>
+      <td>0.7</td>
+    </tr>
+    <tr>
+      <td>Healthcare</td>
+      <td>Roche</td>
+      <td>RHHBY</td>
+      <td>23.9</td>
+      <td>-0.0</td>
+    </tr>
+    <tr>
+      <td>Communication Services</td>
+      <td>Deutsche Telekom</td>
+      <td>DTE.DE</td>
+      <td>16.3</td>
+      <td>-9.2</td>
+    </tr>
+    <tr>
+      <td>Consumer Defensive</td>
+      <td>Unilever</td>
+      <td>ULVR.L</td>
+      <td>21.7</td>
+      <td>-10.7</td>
+    </tr>
+    <tr>
+      <td>Consumer Cyclical</td>
+      <td>LVMH</td>
+      <td>MC.PA</td>
+      <td>20.7</td>
+      <td>-16.4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+<footer>Proyecto 4 · Roadmap Quant · SQLite + Python (pandas, yfinance, Plotly)</footer>
+
+</div>
+</body>
+</html>
