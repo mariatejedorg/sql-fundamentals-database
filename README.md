@@ -1,49 +1,49 @@
-# 🗄️ Proyecto 4 — Base de Datos de Fundamentales en SQL
+# 🗄️ SQL Fundamentals Database
 
-> 18 empresas, 2 tablas relacionadas, 4 preguntas de negocio respondidas en SQL puro — la segunda habilidad técnica explícita de la oferta de referencia (Quant Analyst Sales).
+> 18 companies, 2 related tables, 4 business questions answered in pure SQL — the second explicit technical skill from the reference job posting (Quant Analyst Sales).
 
-![SQLite](https://img.shields.io/badge/SQLite-base%20de%20datos-003B57?logo=sqlite&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL-consultas%20documentadas-4479A1?logo=postgresql&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-database-003B57?logo=sqlite&logoColor=white)
+![SQL](https://img.shields.io/badge/SQL-documented%20queries-4479A1?logo=postgresql&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
 ![Plotly](https://img.shields.io/badge/Plotly-dashboard-3F4F75?logo=plotly&logoColor=white)
 
 ---
 
-## Qué hace
+## What it does
 
-Carga datos fundamentales (sector, capitalización, PER, margen de beneficio, crecimiento de ingresos) de 18 empresas en una base de datos relacional **SQLite**, junto con su histórico de precios reciente, y responde 4 preguntas de negocio reales con consultas SQL — cada una documentada con su objetivo antes que su código. A diferencia de los Proyectos 1-3, el protagonista aquí no es el análisis en Python sino el modelo de datos y el SQL en sí.
+Loads fundamental data (sector, market cap, P/E ratio, profit margin, revenue growth) for 18 companies into a **SQLite** relational database, along with their recent price history, and answers 4 real business questions with SQL queries — each one documented with its business objective ahead of its code. Unlike the other projects in this portfolio, the focus here isn't the Python analysis but the data model and the SQL itself.
 
-## Vista previa del dashboard
+## Dashboard preview
 
-La versión interactiva completa está en [`outputs/dashboard.html`](outputs/dashboard.html): ábrelo con doble clic, no necesita servidor. Muestra 2 gráficos de apoyo y una tarjeta por consulta con su tabla de resultado.
+The full interactive version is in [`outputs/dashboard.html`](outputs/dashboard.html): just double-click to open it, no server required. It shows 2 supporting charts and one card per query with its result table.
 
-## Estructura del proyecto
+## Project structure
 
-Primera estructura del portfolio con una carpeta `db/` (esquema + base de datos) y una carpeta `sql/` con archivos `.sql` reales versionados — lo que hace visible en el repo que el proyecto es, ante todo, un ejercicio de SQL:
+The first project in this portfolio with a `db/` folder (schema + database) and a `sql/` folder with real, version-controlled `.sql` files — making it clear from the repo alone that this project is, first and foremost, a SQL exercise:
 
 ```
-proyecto-4-fundamentales-sql/
+sql-fundamentals-database/
 ├── README.md
 ├── requirements.txt
-├── data/                 <- caché de fundamentales y precios descargados
+├── data/                 <- cached downloaded fundamentals and prices
 ├── db/
-│   ├── schema.sql          <- DDL: definición de las tablas
-│   └── fundamentales.db     <- base de datos SQLite generada (no versionada)
-├── sql/                   <- una consulta por pregunta de negocio, documentada
+│   ├── schema.sql          <- DDL: table definitions
+│   └── fundamentales.db     <- generated SQLite database (not version-controlled)
+├── sql/                   <- one query per business question, documented
 │   ├── 01_ranking_per_por_sector.sql
 │   ├── 02_mejor_margen_por_sector.sql
 │   ├── 03_evolucion_metrica_por_sector.sql
 │   └── 04_rentabilidad_reciente_por_empresa.sql
 ├── src/
-│   ├── data.py              <- descarga fundamentales y precios (yfinance)
-│   ├── build_db.py           <- crea el esquema y carga los datos en SQLite
-│   ├── queries.py             <- ejecuta cada .sql vía pandas, expone el objetivo de negocio
-│   ├── dashboard.py            <- dashboard interactivo (Plotly) -> outputs/dashboard.html
-│   └── main.py                   <- orquesta el pipeline
-└── outputs/               <- dashboard generado
+│   ├── data.py              <- downloads fundamentals and prices (yfinance)
+│   ├── build_db.py           <- creates the schema and loads the data into SQLite
+│   ├── queries.py             <- runs each .sql via pandas, exposes the business objective
+│   ├── dashboard.py            <- interactive dashboard (Plotly) -> outputs/dashboard.html
+│   └── main.py                   <- orchestrates the pipeline
+└── outputs/               <- generated dashboard
 ```
 
-## Esquema de la base de datos
+## Database schema
 
 ```sql
 CREATE TABLE empresas (
@@ -65,41 +65,41 @@ CREATE TABLE precios_historicos (
 );
 ```
 
-`precios_historicos` existe específicamente para poder hacer un **JOIN real** entre ambas tablas (consulta 04) — no solo `GROUP BY` sobre una tabla plana, que sería el error típico de un ejercicio de SQL demasiado simple.
+`precios_historicos` (price history) exists specifically to enable a **real JOIN** between both tables (query 04) — not just a `GROUP BY` over a flat table, which would be the typical mistake in an overly simple SQL exercise.
 
-## Cómo ejecutarlo
+## How to run it
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # en Windows: venv\Scripts\activate
+source venv/bin/activate  # on Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python src/main.py
 ```
 
-Al terminar, la consola imprime cada consulta con su objetivo de negocio y su resultado, y se genera `outputs/dashboard.html`. La base de datos se recrea desde cero en cada ejecución (`db/fundamentales.db`), a partir de la caché en `data/`.
+On completion, the console prints each query with its business objective and result, and `outputs/dashboard.html` is generated. The database is rebuilt from scratch on every run (`db/fundamentales.db`), from the cache in `data/`.
 
-### Nota sobre certificados SSL
-Mismo mecanismo que en los Proyectos 1-3: si `yfinance` falla con `CERTIFICATE_VERIFY_FAILED` (típico con antivirus que inspeccionan el tráfico HTTPS, p. ej. Norton), `src/data.py` usa automáticamente un bundle de certificados local en `.certs/cacert.pem` si existe.
+### A note on SSL certificates
+Same mechanism as in the other projects in this portfolio: if `yfinance` fails with `CERTIFICATE_VERIFY_FAILED` (typical with antivirus software that inspects HTTPS traffic, e.g. Norton), `src/data.py` automatically uses a local certificate bundle at `.certs/cacert.pem` if present.
 
-## Las 4 consultas
+## The 4 queries
 
-| Archivo | Pregunta de negocio | Concepto SQL |
+| File | Business question | SQL concept |
 |---|---|---|
-| `01_ranking_per_por_sector.sql` | ¿Qué empresas cotizan más baratas (PER bajo) dentro de cada sector? | `WHERE` (filtra filas) + `ORDER BY` |
-| `02_mejor_margen_por_sector.sql` | ¿Qué empresa es la más rentable dentro de cada sector? | Subconsulta correlacionada (`MAX` por sector) |
-| `03_evolucion_metrica_por_sector.sql` | Capitalización total y PER medio por sector | `GROUP BY` + `AVG`/`SUM` — contraste directo con `WHERE` |
-| `04_rentabilidad_reciente_por_empresa.sql` | Rentabilidad reciente de cada empresa, cruzada con su PER | `JOIN` real entre `empresas` y `precios_historicos` |
+| `01_ranking_per_por_sector.sql` | Which companies trade cheapest (low P/E) within each sector? | `WHERE` (row filtering) + `ORDER BY` |
+| `02_mejor_margen_por_sector.sql` | Which company is the most profitable within each sector? | Correlated subquery (`MAX` per sector) |
+| `03_evolucion_metrica_por_sector.sql` | Total market cap and average P/E by sector | `GROUP BY` + `AVG`/`SUM` — direct contrast with `WHERE` |
+| `04_rentabilidad_reciente_por_empresa.sql` | Each company's recent return, cross-referenced with its P/E | Real `JOIN` between `empresas` and `precios_historicos` |
 
-## Resultados
-_(snapshot al momento de ejecución; 18 empresas en 9 sectores)_
+## Results
+_(snapshot as of the run date; 18 companies across 9 sectors)_
 
-- **Tecnología** es, con diferencia, el sector con más peso (≈9.030 Bn de capitalización conjunta) y el más caro como bloque (PER medio 37.4, frente a 8.7 de Energía) — Apple, Microsoft, SAP y ASML.
-- **Repsol** (PER 8.7, el más bajo de toda la cesta) fue también la empresa con mejor rentabilidad reciente (+45.3%): un caso donde "barata sobre el papel" y "el mercado la está premiando" coincidieron — no siempre es así, y es justo lo que la consulta 04 permite contrastar en una sola tabla.
-- **LVMH** fue el caso contrario: PER intermedio (20.7) pero la peor rentabilidad reciente (-16.4%), reflejo del mismo enfriamiento del sector lujo europeo ya observado en el Proyecto 1.
-- Por margen de beneficio, **Microsoft** lidera con holgura (40.3%) seguida de **Banco Santander** (33.5%) — confirma que comparar márgenes sector a sector (consulta 02) evita conclusiones erróneas: un margen del 33% es excepcional en banca, pero sería mediocre en software.
+- **Technology** is by far the sector with the most weight (≈$9,030B combined market cap) and the most expensive as a group (average P/E of 37.4, vs. 8.7 for Energy) — Apple, Microsoft, SAP and ASML.
+- **Repsol** (P/E of 8.7, the lowest in the whole basket) was also the company with the best recent return (+45.3%): a case where "cheap on paper" and "being rewarded by the market" coincided — this isn't always the case, and it's exactly what query 04 lets you check in a single table.
+- **LVMH** was the opposite case: mid-range P/E (20.7) but the worst recent return (-16.4%), reflecting the same cooling of the European luxury sector already observed in Market Data Analytics.
+- By profit margin, **Microsoft** leads by a wide margin (40.3%) followed by **Banco Santander** (33.5%) — confirming that comparing margins sector by sector (query 02) avoids misleading conclusions: a 33% margin is exceptional in banking but would be mediocre in software.
 
-## Conceptos para poder explicar en entrevista
+## Concepts to be able to explain in an interview
 
-- **`WHERE` vs. `GROUP BY`**: `WHERE` filtra filas individuales *antes* de cualquier agregación; `GROUP BY` agrupa filas en bloques para aplicar una función de agregación (`AVG`, `SUM`, `COUNT`) a cada bloque — son operaciones en momentos distintos de la ejecución de la consulta, y `HAVING` (no usado aquí, pero hay que saber cuándo) filtraría *después* de agrupar.
-- **JOIN**: por qué cruzar `empresas` y `precios_historicos` por `ticker` permite responder preguntas que ninguna de las dos tablas responde por separado — y por qué esto es justo lo que un CSV suelto no resuelve sin duplicar datos (repetir sector/PER en cada fila de precio, por ejemplo).
-- **Por qué una base de datos relacional en vez de CSVs sueltos**: integridad referencial (`FOREIGN KEY`), evitar duplicación de datos, y la capacidad de responder preguntas nuevas con una consulta en vez de reescribir un script de pandas cada vez.
+- **`WHERE` vs. `GROUP BY`**: `WHERE` filters individual rows *before* any aggregation; `GROUP BY` groups rows into buckets to apply an aggregate function (`AVG`, `SUM`, `COUNT`) to each one — these happen at different moments of query execution, and `HAVING` (not used here, but worth knowing when to reach for) would filter *after* grouping.
+- **JOIN**: why cross-referencing `empresas` and `precios_historicos` by `ticker` answers questions neither table can answer on its own — and why this is exactly what a loose CSV can't solve without duplicating data (repeating sector/P/E on every price row, for example).
+- **Why a relational database instead of loose CSVs**: referential integrity (`FOREIGN KEY`), avoiding data duplication, and the ability to answer new questions with a query instead of rewriting a pandas script every time.
