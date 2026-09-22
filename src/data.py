@@ -1,5 +1,6 @@
 """Descarga de datos fundamentales y precios recientes con yfinance."""
 
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -37,6 +38,11 @@ PRICE_HISTORY_PERIOD = "6mo"
 _CUSTOM_CA_BUNDLE = Path(__file__).resolve().parent.parent / ".certs" / "cacert.pem"
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+
+# Aplica solo a precios_recientes.csv: a diferencia de fundamentales.csv (snapshot
+# puntual por diseño, ver docstring de abajo), los precios son una serie diaria, así
+# que una caché de semanas puede servir sin avisar un rango que ya no llega a "hoy".
+CACHE_MAX_AGE = timedelta(days=1)
 
 
 def _build_session():
@@ -96,12 +102,25 @@ def download_recent_prices(companies: dict[str, str] = COMPANIES, period: str = 
 
 
 def load_or_download_recent_prices(companies: dict[str, str] = COMPANIES, period: str = PRICE_HISTORY_PERIOD) -> pd.DataFrame:
+    """Usa la caché en data/precios_recientes.csv si es reciente (< CACHE_MAX_AGE);
+    si no, descarga datos frescos y solo recurre a la caché vieja si la descarga falla.
+    """
     DATA_DIR.mkdir(exist_ok=True)
     cache_path = DATA_DIR / "precios_recientes.csv"
 
-    if cache_path.exists():
+    cache_is_fresh = (
+        cache_path.exists()
+        and datetime.now() - datetime.fromtimestamp(cache_path.stat().st_mtime) < CACHE_MAX_AGE
+    )
+    if cache_is_fresh:
         return pd.read_csv(cache_path)
 
-    df = download_recent_prices(companies, period)
+    try:
+        df = download_recent_prices(companies, period)
+    except Exception:
+        if cache_path.exists():
+            return pd.read_csv(cache_path)
+        raise
+
     df.to_csv(cache_path, index=False)
     return df
