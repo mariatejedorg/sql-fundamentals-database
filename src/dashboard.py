@@ -6,6 +6,7 @@ protagonista es el resultado de cada consulta SQL -- el dashboard es
 principalmente tablas, con un par de gráficos de apoyo.
 """
 
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -140,6 +141,8 @@ def build_dashboard(query_results: list[dict], n_empresas: int) -> Path:
 
     n_sectores = len(by_file["03_evolucion_metrica_por_sector.sql"]["resultado"])
 
+    run_timestamp = datetime.now().strftime("%d/%m/%Y %H:%M")
+
     page = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -209,7 +212,7 @@ def build_dashboard(query_results: list[dict], n_empresas: int) -> Path:
   <div class="hero-inner">
     <h1>Base de Datos de Fundamentales en SQL</h1>
     <p>{n_empresas} empresas en {n_sectores} sectores, cargadas en SQLite y consultadas con SQL puro.</p>
-    <div class="meta">datos fundamentales y de precio vía yfinance</div>
+    <div class="meta">datos fundamentales y de precio vía yfinance · Última ejecución: {run_timestamp}</div>
   </div>
 </div>
 
